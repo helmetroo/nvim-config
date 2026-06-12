@@ -99,7 +99,7 @@ do
   vim.g.maplocalleader = ' '
 
   -- Set to true if you have a Nerd Font installed and selected in the terminal
-  vim.g.have_nerd_font = false
+  vim.g.have_nerd_font = true
 
   -- [[ Setting options ]]
   --  See `:help vim.o`
@@ -110,7 +110,7 @@ do
   vim.o.number = true
   -- You can also add relative line numbers, to help with jumping.
   --  Experiment for yourself to see if you like it!
-  -- vim.o.relativenumber = true
+  vim.o.relativenumber = true
 
   -- Enable mouse mode, can be useful for resizing splits for example!
   vim.o.mouse = 'a'
@@ -233,6 +233,19 @@ do
   vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
   vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
   vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+  -- Spacemacs window bindings
+  vim.keymap.set('n', '<leader>wh', '<C-w>h', { desc = 'Jump to the left window' })
+  vim.keymap.set('n', '<leader>wl', '<C-w>l', { desc = 'Jump to the right window' })
+  vim.keymap.set('n', '<leader>wj', '<C-w>j', { desc = 'Jump to the lower window' })
+  vim.keymap.set('n', '<leader>wk', '<C-w>k', { desc = 'Jump to the upper window' })
+  vim.keymap.set('n', '<leader>w-', '<C-w>s', { desc = 'Horizontal split' })
+  vim.keymap.set('n', '<leader>ws', '<C-w>s', { desc = 'Horizontal split' })
+  vim.keymap.set('n', '<leader>w/', '<C-w>v', { desc = 'Vertical split' })
+  vim.keymap.set('n', '<leader>wv', '<C-w>v', { desc = 'Vertical split' })
+  vim.keymap.set('n', '<leader>ww', '<C-w>w', { desc = 'Other window' })
+  vim.keymap.set('n', '<leader>w1', '<C-w>o', { desc = 'Maximize window' })
+  vim.keymap.set('n', '<leader>wd', '<C-w>q', { desc = 'Delete window' })
 
   -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
   -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -736,13 +749,13 @@ do
     -- clangd = {},
     -- gopls = {},
     -- pyright = {},
-    -- tsc = {},
-    --
-    -- Some languages (like rust) have entire language plugins that can be useful:
-    --    https://github.com/mrcjkb/rustaceanvim
-    --
-    -- But for many setups, the LSP (`rust_analyzer`) will work just fine
     -- rust_analyzer = {},
+    --
+    -- Some languages (like typescript) have entire language plugins that can be useful:
+    --    https://github.com/pmizio/typescript-tools.nvim
+    --
+    -- But for many setups, the LSP (`ts_ls`) will work just fine
+    ts_ls = {},
 
     stylua = {}, -- Used to format Lua code
 
@@ -826,8 +839,11 @@ do
     format_on_save = function(bufnr)
       -- You can specify filetypes to autoformat on save here:
       local enabled_filetypes = {
-        -- lua = true,
-        -- python = true,
+        lua = true,
+        python = true,
+        typescript = true,
+        javascript = true,
+        astro = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 500 }
@@ -948,7 +964,7 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'javascript', 'typescript', 'astro' }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer
@@ -1014,25 +1030,17 @@ do
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug'
-  -- require 'kickstart.plugins.indent_line'
-  -- require 'kickstart.plugins.lint'
-  -- require 'kickstart.plugins.autopairs'
-  -- require 'kickstart.plugins.neo-tree'
+  require 'kickstart.plugins.debug'
+  require 'kickstart.plugins.indent_line'
+  require 'kickstart.plugins.lint'
+  require 'kickstart.plugins.autopairs'
+  require 'kickstart.plugins.neo-tree'
+  require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
 
-  -- NOTE: You can add your own plugins, configuration, etc. in `lua/custom/plugins/*.lua`.
+  -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --
-  -- For independent modules, uncomment the convenience loader:
-  -- require 'custom.plugins'
-  --
-  -- `custom.plugins` automatically loads files from that directory, but their
-  -- order is unspecified. If plugins depend on each other, keep them in the same
-  -- file and put their `vim.pack.add()` and `setup()` calls in the required order.
-  --
-  -- If separate modules need a specific order, require them explicitly instead:
-  -- require 'custom.plugins.colorscheme'
-  -- require 'custom.plugins.ui'
-  -- require 'custom.plugins.git'
+  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
+  require 'custom.plugins'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
